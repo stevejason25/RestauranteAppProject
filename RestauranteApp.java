@@ -313,6 +313,7 @@ class Cliente implements ObservadorPedido {
 }
 
 // --- CLASE PRINCIPAL PARA DEMOSTRACIÓN EN CONSOLA ---
+// --- CLASE PRINCIPAL PARA DEMOSTRACIÓN EN CONSOLA ---
 public class RestauranteApp {
     public static void main(String[] args) {
         System.out.println("Bienvenido al Sistema de Gestión de Pedidos del Restaurante!");
@@ -370,15 +371,16 @@ public class RestauranteApp {
         pedido1.registrarObservador(clienteJuan);
         System.out.println("Cliente '" + clienteAna.getNombre() + "' y '" + clienteJuan.getNombre() + "' están observando el Pedido #" + pedido1.getIdPedido() + ".");
 
-        // Cambiar estado del pedido (esto notificará a los observadores)
+        // Cambiar estado del pedido1 (esto notificará a los observadores registrados)
         pedido1.setEstado(EstadoPedido.EN_PREPARACION);
         pedido1.setEstado(EstadoPedido.LISTO_PARA_ENTREGA);
 
-        // Un cliente deja de observar
+        // Un cliente deja de observar el pedido1
         pedido1.eliminarObservador(clienteJuan);
         System.out.println("\nCliente '" + clienteJuan.getNombre() + "' ya no observa el Pedido #" + pedido1.getIdPedido() + ".");
 
-        pedido1.setEstado(EstadoPedido.ENTREGADO); // Solo Ana recibirá esta notificación
+        // Último cambio de estado para pedido1 (solo Ana recibirá esta notificación)
+        pedido1.setEstado(EstadoPedido.ENTREGADO);
 
         // Crear otro pedido para demostrar que los observadores son por pedido
         System.out.println("\n--- OTRO PEDIDO Y OBSERVADOR ---");
@@ -386,11 +388,17 @@ public class RestauranteApp {
         Cliente clienteLuis = new Cliente("Luis");
         pedido2.registrarObservador(clienteLuis);
         pedido2.agregarItem(fabricaDePlatos.crearPlato("bebida", "Jugo de Naranja", 2.50));
-        pedido2.setEstado(EstadoPedido.EN_PREPARACION); // Luis será notificado, Ana no.
-        pedido2.mostrarDetalle();
+
+        // Cambiar estados del pedido2 (solo Luis será notificado)
+        pedido2.setEstado(EstadoPedido.EN_PREPARACION);
+        pedido2.setEstado(EstadoPedido.LISTO_PARA_ENTREGA); // <--- Estado añadido
+        pedido2.setEstado(EstadoPedido.ENTREGADO);         // <--- Estado añadido
+
+        pedido2.mostrarDetalle(); // Mostrará el detalle final del pedido 2 (estado ENTREGADO)
         System.out.println("--------------------------------\n");
 
         System.out.println("=========================================================");
         System.out.println("Demostración finalizada.");
     }
+
 }
